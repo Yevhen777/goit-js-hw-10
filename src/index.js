@@ -7,13 +7,16 @@ const DEBOUNCE_DELAY = 300;
 
 const inputCountry = document.querySelector('input#search-box');
 const countryList = document.querySelector('.country-list');
+const countryInfo = document.querySelector('.country-info');
 
 inputCountry.addEventListener('input', debounce(inputHandler, DEBOUNCE_DELAY));
 
 function inputHandler(e) {
   if (inputCountry.value.trim() === '') {
-    inputCountry.innerHTML = '';
+    inputCountry.value = '';
+
     countryList.innerHTML = '';
+    countryInfo.innerHTML = '';
   } else {
     fetchCountries(inputCountry.value.trim())
       .then(responseEl => {
@@ -23,37 +26,76 @@ function inputHandler(e) {
           creatingMarkup(responseEl);
         }
       })
-      .catch(arror => {
+      .catch(error => {
         Notiflix.Notify.failure('Oops, there is no country with that name');
+
+        countryList.innerHTML = '';
+        countryInfo.innerHTML = '';
       });
   }
 
   function creatingMarkup(responseEl) {
+    countryList.classList.remove('big-text');
+    countryInfo.innerHTML = '';
+
     if (responseEl.length >= 2 && responseEl.length <= 10) {
-      console.log('Флаг и имя страны');
-    } else if (responseEl.length === 1) {
-      console.log('флаг, название, столица, население и языки');
+      let allCountries = responseEl
+        .map(country => {
+          return `<li><img src="${country.flags.svg}" width="20" height="auto" 
+          style="margin-right:5px" alt="${country.name.common}">${country.name.common}</li>`;
+        })
+        .join('');
+      countryList.innerHTML = allCountries;
+      countryInfo.innerHTML = '';
+    }
+
+    if (responseEl.length === 1) {
+      countryList.innerHTML = '';
+      console.log('object2');
+      countryList.classList.add('big-text');
+
       const markup = responseEl.reduce(
         (acc, result) =>
           acc +
-          `<li>${result.name.official}
-  <p><b>Capital:</b> ${result.capital}</p>
-  <p>${result.population}</p>
-  <img src="${result.flags.svg}" alt="${result.name.official}" width="20" height="auto"></img>
-  <p>${Object.values(result.languages)}</p>
+          `<li class="info">
+          <img src="${result.flags.svg}"  width="25" height="auto"></img>
+          <span class="name-country">${result.name.common}</span>
+  <p><b>Capital: </b> ${result.capital}</p>
+  <p><b>Population: </b>${result.population}</p>
+  
+  <p><b>Languages: </b>${Object.values(result.languages)}</p>
   
 
   </li>`,
         '',
       );
-      countryList.insertAdjacentHTML('beforeend', markup);
+      countryInfo.innerHTML = markup;
     }
   }
 }
 
-// function inputHandler(e) {
-//   const inputEl = e.target.value;
+// function creatingMarkup(result) {
+//   let allCountries = result
+//     .map(country => {
+//       return `<li><img src="${country.flags.svg}" width="20" height="auto"
+//                 style="margin-right:5px" alt="${country.name.common}">${country.name.common}</li>`;
+//     })
+//     .join('');
 
-//   } else if (!res.ok) {
-//     Notiflix.Notify.failure('Oops, there is no country with that name');
+//   countryList.classList.remove('big-size-text');
+//   countryInfo.innerHTML = '';
+//   if (result.length === 1) {
+//     countryList.classList.add('big-size-text');
+
+//     const moreInfo = result
+//       .map(country => {
+//         return `<li class="more-info">
+//             <p><b>Capital: </b>${country.capital}</p>
+//             <p><b>Population: </b>${country.population}</p></li>
+//             <p><b>Lenguages: </b>${Object.values(country.languages)}</p></li>`;
+//       })
+//       .join('');
+
+//     countryInfo.innerHTML = moreInfo;
 //   }
+//   countryList.innerHTML = allCountries;
