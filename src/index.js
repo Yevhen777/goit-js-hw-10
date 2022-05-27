@@ -74,28 +74,4 @@ function inputHandler(e) {
   }
 }
 
-// function creatingMarkup(result) {
-//   let allCountries = result
-//     .map(country => {
-//       return `<li><img src="${country.flags.svg}" width="20" height="auto"
-//                 style="margin-right:5px" alt="${country.name.common}">${country.name.common}</li>`;
-//     })
-//     .join('');
 
-//   countryList.classList.remove('big-size-text');
-//   countryInfo.innerHTML = '';
-//   if (result.length === 1) {
-//     countryList.classList.add('big-size-text');
-
-//     const moreInfo = result
-//       .map(country => {
-//         return `<li class="more-info">
-//             <p><b>Capital: </b>${country.capital}</p>
-//             <p><b>Population: </b>${country.population}</p></li>
-//             <p><b>Lenguages: </b>${Object.values(country.languages)}</p></li>`;
-//       })
-//       .join('');
-
-//     countryInfo.innerHTML = moreInfo;
-//   }
-//   countryList.innerHTML = allCountries;
